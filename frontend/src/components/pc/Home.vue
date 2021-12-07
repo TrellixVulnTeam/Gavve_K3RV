@@ -5,8 +5,8 @@
         <div class="header">
           <div class="header-nav">
             <ul>
-              <li><a href="#">로그인</a></li>
               <li><a href="#">회원가입</a></li>
+              <li><a href="#">로그인</a></li>
             </ul>
           </div>
         </div>
@@ -58,7 +58,7 @@ import Axios from "axios";
 })
 export default class Home extends Vue {
   recommandBanner = "사용자 추천";
-  temp = "뭐지";
+  temp = "뭐지"
 
   getBannerData(): void {
     Axios.get("http://localhost:9999/api/hi")

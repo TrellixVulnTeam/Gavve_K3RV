@@ -1,0 +1,205 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+gamgyulColor = #F8981D
+borderColor = #2f2f2f
+backgroundColor = #1b1b1b
+fontColor = #A5A5A5
+
+navWidth = 200px
+navHeight = 48px
+navMainLeft = -200px
+
+
+*
+  box-sizing border-box
+  
+body
+	overflow: hidden
+	background-color backgroundColor
+  
+.main
+	width calc(100%+200px)
+	position absolute
+	left navMainLeft
+	transition left 0.5s
+	overflow: hidden
+h2
+	margin 0
+	padding 0
+
+ul, li
+	list-style none
+	padding 0
+	margin 0
+
+.left-nav
+	float left
+	width navWidth
+	text-align center
+	color fontColor
+	overflow-y hidden
+	
+.left-nav ul li
+	padding 18px 0
+	
+.left-nav ul li:hover
+	background-color #6E6E6E
+	cursor pointer
+	
+	
+.nav-btn
+	float left
+	width navHeight
+	height navHeight
+	text-align center
+	margin-right 20px
+	user-select none
+	cursor pointer
+	
+.right-body
+	width 100%
+	
+.right-body:after
+	content ""
+	display block
+	clear both
+	
+.nav-title
+	height navHeight
+	line-height navHeight
+	color gamgyulColor
+	position relative
+	width 100%
+	
+.nav-title-input
+	height 32px
+	position absolute
+	border 1px solid borderColor
+	outline none
+	appearance none
+	background-color borderColor
+	color fontColor
+	width 300px
+	top 50%
+	transform: translateY(-50%)
+	width 25%
+	min-width 250px
+	right 300px
+	
+.nav-title-input:after
+	content ""
+	display block
+	clear both
+
+	
+.ham-container
+  display inline-block
+  cursor pointer
+  vertical-align middle
+  margin 0 15px
+
+
+.bar1, .bar2, .bar3
+  width 35px
+  height 5px
+  background-color gamgyulColor
+  margin 6px 0
+
+	
+.navToggle
+	left 0 !important
+	
+
+		
+.body-container
+	color fontColor
+	width auto
+	display grid
+	padding 10px
+	
+.banner-box
+	margin 0 auto
+	border 1px solid fontColor
+	background-color backgroundColor
+	border-radius 5px
+	padding 0 7px
+	width 1000px
+	height 100px
+	position relative
+	margin-bottom 20px
+	
+.banner-box::after
+	clear both
+	
+.banner-img
+	width 150px
+	height 80px
+	border 3px dashed white
+	vertical-align middle
+	float left
+	position relative
+	top 50%
+	transform translateY(-50%)
+	line-height 80px
+	text-align center
+	margin-right 7px
+	user-select none
+	
+.banner-datepicker
+	width 350px
+	float left
+	position relative
+	top 50%
+	transform translateY(-50%)
+	
+.banner-add-box
+	margin 0 auto
+	width 110px
+	text-align center
+	padding 25px 0
+	
+.banner-add-box::after
+	clear both
+	
+.banner-modify-btn
+	border 1px solid white
+	width 100px
+	margin-right 5px
+	height 50px
+	line-height 50px
+	border-radius 10px
+	float left
+	user-select none
+	
+.banner-modify-btn:hover
+	background-color gray
+	
+.banner-linkbox
+	margin-left 5px
+	float left
+	position relative
+	top 50%
+	transform translateY(-50%)
+	
+.banner-linkbox > input[type="text"]
+	width 310px
+	height 38px
+	border-radius 5px
+	outline none
+	border 0
+	
+.banner-modify-btn:last-child
+	margin 0
+	
+.banner-modify-btn:hover
+	cursor pointer
+	
+.banner-box-delete
+	position absolute
+	right 5px
+	user-select none
+	color coral
+
+.banner-box-delete:hover
+	cursor pointer
+	

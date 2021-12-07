@@ -12,7 +12,8 @@ spring:
     password: wkddnwls1!
     url: jdbc:mariadb://localhost:3306/spbootvue?useUnicode=true&characterEncoding=utf8
     username: gamgyule
-  mvc:
-    view:
-      prefix: /WEB-INF/views/
-      suffix: .jsp
+  servlet:
+    multipart:
+      max-file-size: 5120MB
+      max-request-size: 5120MB
+      
