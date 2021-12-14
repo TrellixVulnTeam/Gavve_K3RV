@@ -10,9 +10,9 @@ spring:
   web:
     resources:
       add-mappings: true
-      static-locations: classpath:/static/
+      static-locations: classpath:/webapp/
   mvc:
-    static-path-pattern: /static/**
+    static-path-pattern: /webapp/**
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     password: wkddnwls1!

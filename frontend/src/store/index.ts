@@ -13,6 +13,9 @@ export default createStore({
     },
     SET_BANNER_IMG(state, payload){
       state.bannerData[payload.index].img = payload.src;
+    },
+    SET_BANNER_WORD(state, payload){
+      state.bannerData[payload.index].word = payload.src;
     }
   },
   actions: {},

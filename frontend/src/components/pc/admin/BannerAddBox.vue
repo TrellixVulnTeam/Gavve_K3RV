@@ -11,7 +11,7 @@
       <img
         :ref="`img${bannerindex}`"
         class="banner-upload-image"
-        :src="getImageUrl()"
+        :src="this.$store.state.bannerData[this.bannerindex].img"
         onerror="this.style.visibility='hidden'"
       />
       <input
@@ -80,21 +80,20 @@ export default class BannerAddBox extends Vue {
   date = null;
 
 
-  getImageUrl(){
-    if(this.$store.state.bannerData[this.bannerindex].img === "temp"){
-      return "";
-    }else{
-      return this.$store.state.bannerData[this.bannerindex].img;
-    }
-  }
-
-
   deleteBanner(idx) {
     this.$store.commit('REMOVE_BANNER',idx);
   }
 
-  setBannerImg(payload){
+  setBannerImg(payload, file){
     this.$store.commit('SET_BANNER_IMG',payload);
+    
+    this.$refs['img'+this.bannerindex].style = "visibility: visible";
+  }
+
+  setBannerWord(payload, file){
+    this.$store.commit('SET_BANNER_WORD',payload);
+    
+    this.$refs['word'+this.bannerindex].style = "visibility: visible";
   }
 
   drop(event, type){    
@@ -114,7 +113,7 @@ export default class BannerAddBox extends Vue {
     console.log("uploadImage");
     let form = new FormData();
     let idx = this.bannerindex;
-    form.append('image',file);
+    form.append('file',file);
     let payload = {};
     axios.post("/api/banner-image",form,{headers:{'Content-Type':'multipart/form-data'}
     }).then(res => {
@@ -122,8 +121,26 @@ export default class BannerAddBox extends Vue {
         index:idx,
         src:res.data.path
       };
-      this.$refs['img'+this.bannerindex].src = payload.src;
-      //this.setBannerImg(payload);
+      
+      var now = new Date().getTime();
+      console.log(now);
+      this.setBannerImg(payload, file);
+    });
+  }
+
+  uploadWord(file){
+    console.log("uploadWord");
+    let form = new FormData();
+    let idx = this.bannerindex;
+    form.append('file',file);
+    let payload = {};
+    axios.post("/api/banner-image",form,{headers:{'Content-Type':'multipart/form-data'}
+    }).then(res => {
+      payload ={
+        index:idx,
+        src:res.data.path
+      };
+      this.setBannerWord(payload, file);
     });
   }
 
@@ -143,7 +160,6 @@ export default class BannerAddBox extends Vue {
         return false;
       }
     this.uploadImage(file);
-
     }
   }
 
@@ -154,9 +170,7 @@ export default class BannerAddBox extends Vue {
         alert("이미지 파일만 가능합니다.");
         return false;
       }
-
-
-
+    this.uploadWord(file);
     }
   }
 }

@@ -9,7 +9,7 @@ module.exports = {
 				target: 'http://localhost:9989',
 				ws: true,
 				changeOrigin: true
-			},'/static': {
+			},'/webapp': {
 				target: 'http://localhost:9989',
 				changeOrigin: true,
 				ws: true
