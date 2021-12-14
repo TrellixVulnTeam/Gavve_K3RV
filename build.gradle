@@ -30,9 +30,6 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	
-	// https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload
-	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
 		
 	
 }

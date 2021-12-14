@@ -29,7 +29,7 @@
         <div v-show="currentTab == 1">
           <h1>배너 추가/삭제</h1>
           <div class="banner-command">
-            <BannerAddBox v-for="(item, index) in this.$store.state.bannerData" :key="item.id" :bannerinedx="index"></BannerAddBox>
+            <BannerAddBox v-for="(item, index) in this.$store.state.bannerData" :key="item.id" :bannerindex="index" :bannerBoxData="item"></BannerAddBox>
           </div>
           <div class="banner-add-box"><div style="height: 50px"><div @click="bannerAdd" class="banner-modify-btn">추가</div></div></div>
         </div>
@@ -52,7 +52,7 @@ import BannerAddBox from "./BannerAddBox.vue"
 })
 export default class Admin extends Vue {
   navToggle = false;
-  currentTab = 0;
+  currentTab = 1;
   date = null;
 
   NavToggleBtn() {
@@ -60,11 +60,11 @@ export default class Admin extends Vue {
   }
 
   created(){
-    this.$store.state.bannerData.push({id:Math.random() * 1000000 / Math.random()});
+    this.$store.commit("ADD_BANNER");
   }
 
   bannerAdd(){
-    this.$store.state.bannerData.push({id:Math.random() * 1000000 / Math.random()});
+    this.$store.commit("ADD_BANNER");
   }
   
 }

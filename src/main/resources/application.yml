@@ -7,6 +7,12 @@ server:
     include-stacktrace: always
   port: 9989
 spring:
+  web:
+    resources:
+      add-mappings: true
+      static-locations: classpath:/static/
+  mvc:
+    static-path-pattern: /static/**
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     password: wkddnwls1!
