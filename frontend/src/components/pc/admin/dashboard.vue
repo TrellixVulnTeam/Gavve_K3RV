@@ -7,10 +7,10 @@
         </div>
         <div>
           <ul>
-            <li @click="currentTab = 0;NavToggleBtn();">대시보드</li>
-            <li @click="currentTab = 1;NavToggleBtn();">배너설정</li>
-            <li @click="currentTab = 2;NavToggleBtn();">몰</li>
-            <li @click="currentTab = 3;NavToggleBtn();">루</li>
+            <li @click="setCurrentTab(0);NavToggleBtn();">대시보드</li>
+            <li @click="setCurrentTab(1);NavToggleBtn();">배너설정</li>
+            <li @click="setCurrentTab(2);NavToggleBtn();">몰</li>
+            <li @click="setCurrentTab(3);avToggleBtn();">루</li>
           </ul>
         </div>
       </div>
@@ -26,12 +26,13 @@
         <div class="body-container">
 			<div class="tab-contents">
         <div v-show="currentTab == 0">tab1</div>
-        <div v-show="currentTab == 1">
-          <h1>배너 추가/삭제</h1>
+        <div v-show="currentTab == 1"> <!-- tab2 -->
+          
           <div class="banner-command">
+            <h1>배너 추가/삭제</h1>
             <BannerAddBox v-for="(item, index) in this.$store.state.bannerData" :key="item.id" :bannerindex="index" :bannerBoxData="item"></BannerAddBox>
           </div>
-          <div class="banner-add-box"><div style="height: 50px"><div @click="bannerAdd" class="banner-modify-btn">추가</div></div></div>
+          <div class="banner-add-box"><div style="height: 50px"><div @click="bannerAdd" class="banner-modify-btn">추가</div><div @click="bannerAdd" class="banner-modify-btn">저장</div></div></div>
         </div>
         <div v-show="currentTab == 2">tab3</div>
         <div v-show="currentTab == 3">tab4</div>
@@ -41,9 +42,9 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import Axios from "axios";
+import axios from "axios";
 
 import BannerAddBox from "./BannerAddBox.vue"
 
@@ -53,18 +54,47 @@ import BannerAddBox from "./BannerAddBox.vue"
 export default class Admin extends Vue {
   navToggle = false;
   currentTab = 1;
+  scrolled = false;
   date = null;
+  bannerData = [];
 
-  NavToggleBtn() {
-    this.navToggle = !this.navToggle;
+  handleScroll(){
+    this.scrolled = window.scrollY > 60;
   }
 
   created(){
-    this.$store.commit("ADD_BANNER");
+    window.document.addEventListener('scroll',this.handleScroll);
+  }
+
+  unmounted(){
+    window.document.removeEventListener('scroll',this.handleScroll);
+  }
+  
+
+  setCurrentTab(val){
+    this.currentTab = val;
+    let vm = this;
+    switch(val){
+      case 0:
+        console.log("DashboardLoading");
+        break;
+      case 1:
+        axios.get("/api/banner-list").then((res)=>{
+          this.$store.state.bannerData = res.data;
+          console.log("BannerLoading");
+        }).catch((err)=>{
+          console.log(err);
+        })
+        break;
+    }
   }
 
   bannerAdd(){
     this.$store.commit("ADD_BANNER");
+  }
+
+  NavToggleBtn() {
+    this.navToggle = !this.navToggle;
   }
   
 }

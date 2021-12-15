@@ -7,7 +7,11 @@
       @drop.prevent="drop($event,'img')"
       @click="clickUploadImage"
     >
-    이미지.jpg
+      <div
+        class="banner-image-delete"
+        @click="deleteUploadImage(this.$store.state.bannerData[this.bannerindex].img,'img')"
+        v-show="this.$store.state.bannerData[this.bannerindex].img != ''"
+      >✕</div>이미지.jpg
       <img
         :ref="`img${bannerindex}`"
         class="banner-upload-image"
@@ -15,7 +19,7 @@
         onerror="this.style.visibility='hidden'"
       />
       <input
-      :ref="`imgupload${bannerindex}`"
+        :ref="`imgupload${bannerindex}`"
         id="bgImage"
         type="file"
         name="bgImage"
@@ -32,7 +36,11 @@
       @drop.prevent="drop($event,'word')"
       @click="clickUploadWord"
     >
-      글.png
+      <div
+        class="banner-image-delete"
+        @click="deleteUploadImage(this.$store.state.bannerData[this.bannerindex].word,'word')"
+        v-show="this.$store.state.bannerData[this.bannerindex].word != ''"
+      >✕</div>글.png
       <img
         :ref="`word${bannerindex}`"
         class="banner-upload-image"
@@ -47,131 +55,167 @@
         accept="image.*"
         multiple="multiple"
         class="hidden"
-        @change="imageUploadChange($event)"
+        @change="wordUploadChange($event)"
       />
     </div>
 
     <div class="banner-datepicker">
-      <Datepicker locale="kr" placeholder="기간 선택" range v-model="date" format="yyyy/MM/dd HH:mm"></Datepicker>
+      <Datepicker locale="kr" placeholder="기간 선택" v-model="date" range format="yyyy/MM/dd HH:mm"></Datepicker>
     </div>
     <div class="banner-linkbox">
-      <input type="text" placeholder="링크 입력" />
+      <input type="text" placeholder="링크 입력" :value="bannerBoxData.bannerLink" />
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { Prop} from "vue-property-decorator";
+import { Prop } from "vue-property-decorator";
 import Datepicker from "vue3-date-time-picker";
 import "vue3-date-time-picker/dist/main.css";
 import axios from "axios";
 
 @Options({
-  props:{
-    bannerindex: Number,
-    bannerBoxData: Object,
-  },
   components: { Datepicker, Prop },
 })
-
-
-
 export default class BannerAddBox extends Vue {
-  date = null;
-
+  @Prop(Number) bannerindex;
+  @Prop(Object) bannerBoxData;
+  date = [this.bannerBoxData.bannerStart, this.bannerBoxData.bannerEnd];
 
   deleteBanner(idx) {
-    this.$store.commit('REMOVE_BANNER',idx);
+    this.$store.commit("REMOVE_BANNER", idx);
   }
 
-  setBannerImg(payload, file){
-    this.$store.commit('SET_BANNER_IMG',payload);
-    
-    this.$refs['img'+this.bannerindex].style = "visibility: visible";
+  setBannerImg(payload, file) {
+    this.$store.commit("SET_BANNER_IMG", payload);
+
+    this.$refs["img" + this.bannerindex].style = "visibility: visible";
   }
 
-  setBannerWord(payload, file){
-    this.$store.commit('SET_BANNER_WORD',payload);
-    
-    this.$refs['word'+this.bannerindex].style = "visibility: visible";
+  setBannerWord(payload, file) {
+    this.$store.commit("SET_BANNER_WORD", payload);
+
+    this.$refs["word" + this.bannerindex].style = "visibility: visible";
   }
 
-  drop(event, type){    
-    if(type==="img"){
+  drop(event, type) {
+    if (type === "img") {
       this.inputImageDrop(event.dataTransfer.files);
-    }else if(type==="word"){
+    } else if (type === "word") {
       this.inputWordDrop(event.dataTransfer.files);
     }
-
   }
 
-  imageUploadChange(event){
+  imageUploadChange(event) {
     this.uploadImage(event.target.files[0]);
   }
 
-  uploadImage(file){
+  wordUploadChange(event) {
+    this.uploadWord(event.target.files[0]);
+  }
+
+  uploadImage(file) {
     console.log("uploadImage");
     let form = new FormData();
     let idx = this.bannerindex;
-    form.append('file',file);
+    form.append("file", file);
     let payload = {};
-    axios.post("/api/banner-image",form,{headers:{'Content-Type':'multipart/form-data'}
-    }).then(res => {
-      payload ={
-        index:idx,
-        src:res.data.path
-      };
-      
-      var now = new Date().getTime();
-      console.log(now);
-      this.setBannerImg(payload, file);
-    });
+    axios
+      .post("/api/banner-image", form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((res) => {
+        payload = {
+          index: idx,
+          src: res.data.path,
+        };
+        this.setBannerImg(payload, file);
+      });
   }
 
-  uploadWord(file){
+  uploadWord(file) {
     console.log("uploadWord");
     let form = new FormData();
     let idx = this.bannerindex;
-    form.append('file',file);
+    form.append("file", file);
     let payload = {};
-    axios.post("/api/banner-image",form,{headers:{'Content-Type':'multipart/form-data'}
-    }).then(res => {
-      payload ={
-        index:idx,
-        src:res.data.path
-      };
-      this.setBannerWord(payload, file);
-    });
+    axios
+      .post("/api/banner-image", form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((res) => {
+        payload = {
+          index: idx,
+          src: res.data.path,
+        };
+        this.setBannerWord(payload, file);
+      });
   }
 
-  clickUploadImage(){
-    this.$refs['imgupload'+this.bannerindex].click();
+  clickUploadImage() {
+    if (this.$store.state.bannerData[this.bannerindex].img != "") {
+      return;
+    }
+    this.$refs["imgupload" + this.bannerindex].click();
   }
 
-  clickUploadWord(){
-    this.$refs['wordupload'+this.bannerindex].click();
+  clickUploadWord() {
+    if (this.$store.state.bannerData[this.bannerindex].word != "") {
+      return;
+    }
+    this.$refs["wordupload" + this.bannerindex].click();
   }
 
-  inputImageDrop(files){
-    if(files.length){
+  inputImageDrop(files) {
+    if (this.$store.state.bannerData[this.bannerindex].img != "") {
+      return;
+    }
+    if (files.length) {
       var file = files[0];
-      if(!/^image\//.test(file.type)){
+      if (!/^image\//.test(file.type)) {
         alert("이미지 파일만 asdasd가능합니다.");
         return false;
       }
-    this.uploadImage(file);
+      this.uploadImage(file);
     }
   }
 
-  inputWordDrop(files){
-    if(files.length){
+  inputWordDrop(files) {
+    if (this.$store.state.bannerData[this.bannerindex].word != "") {
+      return;
+    }
+    if (files.length) {
       var file = files[0];
-      if(!/^image\//.test(file.type)){
+      if (!/^image\//.test(file.type)) {
         alert("이미지 파일만 가능합니다.");
         return false;
       }
-    this.uploadWord(file);
+      this.uploadWord(file);
     }
+  }
+
+  deleteUploadImage(path, target) {
+    if(path == "")
+      return;
+    
+    let vm = this;
+    let fileName = path.split("/")[4];
+    console.log("Delete : " + fileName);
+    axios
+      .delete("/api/banner-image-temp/"+fileName)
+      .then((res) => {
+        console.log(res.data);
+        if(target === "img"){
+          vm.$store.state.bannerData[vm.bannerindex].img = "";
+        }else if(target === "word"){
+          vm.$store.state.bannerData[vm.bannerindex].word = "";
+        }else{
+          console.log("[deleteUploadImage] target이 잘못됨.");
+        }
+      })
+      .catch((err) => {
+        console.log("deleteUploadImage : "+err);
+      });
   }
 }
 </script>
